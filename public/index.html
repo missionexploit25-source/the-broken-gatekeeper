@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Broken Gatekeeper</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 
+    TODO: Remove test credentials before production deployment
+    Demo Account: --. ..- . ... - / --. ..- . ... - .---- ..--- ...--
+    Admin Account: Credentials stored securely (DO NOT SHARE)
+  -->
+  
+  <div class="container">
+    <div class="header">
+      <h1>SECURE LOGIN PORTAL v2.1</h1>
+      <p class="subtitle">// The Broken Gatekeeper CTF Challenge</p>
+    </div>
+
+    <div class="login-box" id="loginBox">
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">USERNAME:</label>
+          <input type="text" id="username" name="username" required autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label for="password">PASSWORD:</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn">LOGIN</button>
+      </form>
+      <div id="error" class="error"></div>
+    </div>
+
+    <div class="token-box" id="tokenBox" style="display: none;">
+      <h3>ACCESS TOKEN:</h3>
+      <code id="tokenDisplay"></code>
+      <button class="btn" id="dashboardBtn">ACCESS DASHBOARD</button>
+      <div id="response" class="response"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:3000';
+    let currentToken = null;
+
+    // Disable right-click
+    document.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      console.log('%c[SECURITY] Right-click disabled', 'color: #ff0000');
+      return false;
+    });
+
+    // Disable common dev tools shortcuts (can still be bypassed)
+    document.addEventListener('keydown', (e) => {
+      // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
+      if (e.keyCode === 123 || 
+          (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) ||
+          (e.ctrlKey && e.keyCode === 85)) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    // Debug credentials for testing - REMOVE BEFORE PRODUCTION!
+    // Encoded: --. ..- . ... - / --. ..- . ... - .---- ..--- ...--
+    console.log('%c[DEV] Test Credentials Available', 'color: #00ff00; font-weight: bold');
+    console.log('%cDecode this: --. ..- . ... - / --. ..- . ... - .---- ..--- ...--', 'color: #00aa00');
+    console.log('%c[HINT] Morse code decoder needed', 'color: #00aa00');
+    console.log('%c[WARNING] Do not use in production!', 'color: #ff0000; font-weight: bold');
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const errorDiv = document.getElementById('error');
+
+      try {
+        const response = await fetch(`${API_URL}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          errorDiv.textContent = `[ERROR] ${data.error}`;
+          return;
+        }
+
+        currentToken = data.token;
+        localStorage.setItem('token', currentToken);
+
+        document.getElementById('loginBox').style.display = 'none';
+        document.getElementById('tokenBox').style.display = 'block';
+        document.getElementById('tokenDisplay').textContent = currentToken;
+
+      } catch (err) {
+        errorDiv.textContent = `[ERROR] ${err.message}`;
+      }
+    });
+
+    document.getElementById('dashboardBtn').addEventListener('click', async () => {
+      const responseDiv = document.getElementById('response');
+
+      try {
+        const response = await fetch(`${API_URL}/dashboard`, {
+          headers: { 'Authorization': `Bearer ${currentToken}` }
+        });
+
+        const data = await response.json();
+        responseDiv.textContent = JSON.stringify(data, null, 2);
+        responseDiv.style.display = 'block';
+
+      } catch (err) {
+        responseDiv.textContent = `[ERROR] ${err.message}`;
+        responseDiv.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
