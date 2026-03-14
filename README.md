@@ -56,7 +56,7 @@ const maliciousToken = `${header}.${payload}.`;
 // Use this token in Authorization: Bearer header
 ```
 
-The flag is: `FLAG{jwt_n0ne_alg_byp4ss}`
+The flag is: `TRACECTF{sl3pt_0n_k3yb04rd_g0t_f14g}`
 </details>
 
 ## Learning Objectives

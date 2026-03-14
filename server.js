@@ -104,8 +104,8 @@ app.get('/admin/flag', vulnerableJWTCheck, (req, res) => {
     return res.status(403).json({ error: 'Access denied. Admins only.' });
   }
 
-  // FLAG: FLAG{jwt_n0ne_alg_byp4ss}
-  res.json({ flag: 'RkxBR3tqd3RfbjBuZV9hbGdfYnlwNHNzfQ==' });
+  // FLAG: TRACECTF{sl3pt_0n_k3yb04rd_g0t_f14g}
+  res.json({ flag: 'TRACECTF{sl3pt_0n_k3yb04rd_g0t_f14g}' });
 });
 
 app.listen(PORT, () => {

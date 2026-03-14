@@ -52,7 +52,7 @@ exports.handler = async (event) => {
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ flag: 'RkxBR3tqd3RfbjBuZV9hbGdfYnlwNHNzfQ==' })
+      body: JSON.stringify({ flag: 'TRACECTF{sl3pt_0n_k3yb04rd_g0t_f14g}' })
     };
   } catch (err) {
     console.log('[DEBUG] Token verification error:', err.message);
