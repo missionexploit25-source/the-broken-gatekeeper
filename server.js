@@ -105,7 +105,7 @@ app.get('/admin/flag', vulnerableJWTCheck, (req, res) => {
   }
 
   // FLAG: TRACECTF{sl3pt_0n_k3yb04rd_g0t_f14g}
-  res.json({ flag: 'TRACECTF{sl3pt_0n_k3yb04rd_g0t_f14g}' });
+  res.json({ flag: 'VFJBQ0VDVEZ7c2wzcHRfMG5fazN5YjA0cmRfZzB0X2YxNGd9' });
 });
 
 app.listen(PORT, () => {
